@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360 image viewer</title>
+    <link rel="stylesheet" href="/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/pannellum.css"/>
+    <link rel="stylesheet" href="/style.css"/>
+    <script type="text/javascript" src="/pannellum.js"></script>
+</head>
+<body>
+  <div class="d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="masthead d-flex flex-row align-items-center mb-4 text-center">
+      <h3 class="masthead-brand m-0">360 image viewer</h3>
+      <h4 class="flex-grow-1 m-0" id="filename"></h4>
+      <span>Based on <a href="https://pannellum.org/">Pannellum</a></span>
+    </header>
+
+    <main role="main" class="d-flex flex-column flex-grow-1 align-items-center justify-content-center text-center">
+      <div id="panorama" hidden class="flex-grow-1"></div>
+      <p class="lead">
+        <span id="select">
+          To start, select a file
+          <br>
+        </span>
+        <span id="reselect" hidden>
+          Select another file
+        </span>
+        <label class="btn btn-lg btn-secondary">
+            Browse <input id="file" type="file" hidden>
+        </label>
+      </p>
+    </main>
+    <div class="lead d-flex flex-row align-items-center">
+      Examples
+      <div class="d-flex flex-column">
+        <a href="#" class="example"><img src="/example.jpg" width="200" alt="Cedar Breaks" /></a>
+        <a href="https://www.flickr.com/photos/orientalizing/">by orientalizing</a>
+      </div>
+      <div class="d-flex flex-column">
+        <a href="#" class="example"><img src="/example2.jpg" width="200" alt="Siilinjärven kirkon kattokruunun alla" /></a>
+        <a href="https://www.flickr.com/photos/jannefoo/">by jannefoo</a>
+      </div>
+    </div>
+
+    <script>
+      const panorama = document.getElementById("panorama");
+      const file = document.getElementById("file");
+      function displayPhoto(url, filename) {
+          document.getElementById("filename").textContent = filename;
+          document.getElementById("select").setAttribute('hidden', '');
+          document.getElementById("reselect").removeAttribute('hidden');
+          panorama.removeAttribute('hidden');
+          pannellum.viewer(panorama, {
+              type: "equirectangular",
+              panorama: url,
+              autoLoad: true,
+          });
+      }
+      file.addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        displayPhoto(URL.createObjectURL(file), file.name);
+      });
+      const examples = document.querySelectorAll(".example");
+      examples.forEach(function(el) {
+        el.addEventListener("click", function(e) {
+          e.preventDefault();
+          displayPhoto(e.target.getAttribute('src'), e.target.getAttribute('alt'));
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>
